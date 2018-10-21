@@ -1,0 +1,44 @@
+version: '3'
+services:
+  Bitbucket:
+    depends_on:
+    - Postgres
+    environment:
+      SERVER_PROXY_NAME: localhost
+      SERVER_PROXY_PORT: '8083'
+      SERVER_SCHEME: http
+      SERVER_SECURE: 'false'
+    expose:
+    - '7990'
+    - '7999'
+    image: atlassian/bitbucket-server:latest
+    labels:
+      io.skopos.dt.Postgres: _
+      io.skopos.lb.name: BitbucketWeb
+      io.skopos.lb.position: 160,330
+      io.skopos.visual.position: 450,330
+      name: com.efx.ci.cd.git.bitbucket
+    ports:
+    - 8083:7990
+    volumes:
+    - source: bitbucketVolume
+      target: /var/atlassian/application-data/bitbucket
+      type: volume
+  Postgres:
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: Dev2018$
+      POSTGRES_USER: Dev
+    image: postgres:latest
+    labels:
+      io.skopos.glc.pre_flight.0: plugin docker network_create
+      io.skopos.glc.pre_flight.0.ext: ',l=Ensure project network exists'
+      io.skopos.visual.position: 830,330
+      name: com.efx.ci.cd.git.bitbucket.postgres
+    volumes:
+    - source: PostgresVolume
+      target: /var/lib/postgresql/data
+      type: volume
+volumes:
+  PostgresVolume: null
+  bitbucketVolume: null
