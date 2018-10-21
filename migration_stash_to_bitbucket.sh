@@ -11,7 +11,7 @@ USER=admin
 
 
 
-echo -e "${On_IGreen} ${IPurple}Obteniendo los proyectos disponibles......"
+echo "Obteniendo los proyectos disponibles......"
 
 readarray -t projects < <(curl -s -u $USER:$(cat $PASSWORD_FILE_PATH) $SHEMA://$STASH_SERVER_URL/rest/api/1.0/projects/ | jq -rc '.values | .[] | [{ key: .key, name: .name, description: .description }]')
 
